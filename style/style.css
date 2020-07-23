@@ -1,0 +1,46 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+h1{
+  text-align: center;
+  color: blue;
+}
+
+.cont{
+  display: flex;
+  flex-wrap: wrap;
+  width: 500px;
+  text-align: center;
+  margin: 50px auto;
+}
+
+.cont > * {
+  margin: 10px 0;
+  /* text-align: center; */
+}
+
+
+
+.calendarCell{
+  width: 118px;
+  background: #ccc;
+  border: 2px solid black;
+  text-align: center;
+
+}
+
+.calendarCell span{
+  font-weight: bold;
+  line-height: 2.5;
+}
+
+.festa{
+  color: red;
+}
+
+p{
+  padding: 2px 0;
+}
