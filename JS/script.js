@@ -2,18 +2,47 @@
 // Il calendario partirà da gennaio 2018 e si concluderà a dicembre 2018 (unici dati disponibili sull'API).
 // Milestone 1
 // Creiamo il mese di Gennaio, e con la chiamata all'API inseriamo le festività.
-
+// Milestone 2
+// Diamo la possibilità di cambiare mese, gestendo il caso in cui l'API non possa ritornare festività.
 
 function init(){
-  var meseBase = moment("2018-01-01");
-  // var meseBase2 = moment("1-2018", "M-YYYY");
-
-  console.log(meseBase);
+  var meseHightlight = 1;
+  var meseBase = moment("2018-"+meseHightlight+"-01", "YYYY-M-AA");
   writeMonth(meseBase);
   writeFeste(meseBase);
 
+  $("header i.right").click(function(){
+
+     meseHightlight +=1;
+     console.log(meseHightlight);
+     if (meseHightlight > 12) {
+       alert("OOPS");
+     } else {
+       var template = $("#template").html();
+       var compiled = Handlebars.compile(template);
+       var target = $("#cont");
+
+       var meseBase = moment("2018-"+meseHightlight+"-01", "YYYY-MM-AA");
+       writeMonth(meseBase);
+       writeFeste(meseBase);
+     }
+  })
+  $("header i.left").click(function(){
+     meseHightlight -=1;
+     console.log(meseHightlight);
+     if (meseHightlight <= 0) {
+       alert("OOPS");
+     } else {
+       var meseBase = moment("2018-"+meseHightlight+"-01", "YYYY-MM-AA");
+       writeMonth(meseBase);
+       writeFeste(meseBase);
+     }
+  })
 
 }
+
+
+
 
 function writeMonth(meseBase){
   var daysInMonth = meseBase.daysInMonth();
@@ -31,9 +60,10 @@ function writeMonth(meseBase){
 }
 
 
+
 function writeFeste(meseBase){
   var anno = meseBase.year();
-  var mese = meseBase.month();
+  var mese = meseBase.month(); //questo restituisce il mese con base 0
 
   $.ajax({
       url:'https://flynn.boolean.careers/exercises/api/holidays',
@@ -56,5 +86,6 @@ function writeFeste(meseBase){
       }
   })
 }
+
 
 $(document).ready(init);
