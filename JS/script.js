@@ -6,53 +6,89 @@
 // Diamo la possibilità di cambiare mese, gestendo il caso in cui l'API non possa ritornare festività.
 
 function init(){
-  var meseHightlight = 1;
-  var meseBase = moment("2018-"+meseHightlight+"-01", "YYYY-M-AA");
-  writeMonth(meseBase);
-  writeFeste(meseBase);
+  var monthHightlight = 1;
+  var monthBase = moment("2018-"+monthHightlight+"-01", "YYYY-M-AA");
+
+  $(document).keydown(function(){
+    var key = event.keyCode;
+    console.log(key);
+    if (key == 39 && monthHightlight <12) {
+      monthHightlight += 1;
+      nextMonth(monthHightlight);
+    }
+    else if (key == 37 && monthHightlight >1) {
+      monthHightlight -= 1;
+      prevMonth(monthHightlight);
+    }
+
+  })
+
+  $("header i.left").click(function(){
+     console.log(monthHightlight);
+     if (monthHightlight <= 1) {
+       alert("Out Of Range");
+     } else {
+       monthHightlight -=1;
+       var monthBase = moment("2018-"+monthHightlight+"-01", "YYYY-MM-AA");
+       var selectHeader = $("header h1");
+       var monthInVerbose = moment(monthHightlight+"/2018", "MM/YYYY").format("MMMM");
+       var test = selectHeader.text("Calendario "+monthInVerbose+" 2018 ");
+       writeMonth(monthBase);
+       writeFeste(monthBase);
+     }
+  })
 
   $("header i.right").click(function(){
-
-     meseHightlight +=1;
-     console.log(meseHightlight);
-     if (meseHightlight > 12) {
-       alert("OOPS");
+     if (monthHightlight >= 12) {
+       alert("Out Of Range");
      } else {
-       var template = $("#template").html();
-       var compiled = Handlebars.compile(template);
-       var target = $("#cont");
-
-       var meseBase = moment("2018-"+meseHightlight+"-01", "YYYY-MM-AA");
-       writeMonth(meseBase);
-       writeFeste(meseBase);
+       monthHightlight +=1;
+       var monthBase = moment("2018-"+monthHightlight+"-01", "YYYY-MM-AA");
+       var selectHeader = $("header h1");
+       var monthInVerbose = moment(monthHightlight+"/2018", "MM/YYYY").format("MMMM");
+       var test = selectHeader.text("Calendario "+monthInVerbose+" 2018 ");
+       writeMonth(monthBase);
+       writeFeste(monthBase);
      }
   })
-  $("header i.left").click(function(){
-     meseHightlight -=1;
-     console.log(meseHightlight);
-     if (meseHightlight <= 0) {
-       alert("OOPS");
-     } else {
-       var meseBase = moment("2018-"+meseHightlight+"-01", "YYYY-MM-AA");
-       writeMonth(meseBase);
-       writeFeste(meseBase);
-     }
-  })
+
+
+  writeMonth(monthBase);
+  writeFeste(monthBase);
 
 }
 
+function nextMonth(monthHightlight){
+     console.log(monthHightlight);
+       var monthBase = moment("2018-"+monthHightlight+"-01", "YYYY-MM-AA");
+       var selectHeader = $("header h1");
+       var monthInVerbose = moment(monthHightlight+"/2018", "MM/YYYY").format("MMMM");
+       var test = selectHeader.text("Calendario "+monthInVerbose+" 2018 ");
+       console.log(test);
+       writeMonth(monthBase);
+       writeFeste(monthBase);
 
+}
 
+function prevMonth(monthHightlight){
+       var monthBase = moment("2018-"+monthHightlight+"-01", "YYYY-MM-AA");
+       var selectHeader = $("header h1");
+       var monthInVerbose = moment(monthHightlight+"/2018", "MM/YYYY").format("MMMM");
+       var test = selectHeader.text("Calendario "+monthInVerbose+" 2018 ");
+       writeMonth(monthBase);
+       writeFeste(monthBase);
 
-function writeMonth(meseBase){
-  var daysInMonth = meseBase.daysInMonth();
+}
+
+function writeMonth(monthBase){
+  var daysInMonth = monthBase.daysInMonth();
   var template = $("#template").html();
   var compiled = Handlebars.compile(template);
   var target = $("#cont");
   target.html("");
 
   for (var i = 1; i <= daysInMonth; i++) {
-    var datacomplete = moment({year:meseBase.year(), month:meseBase.month(), day:i})
+    var datacomplete = moment({year:monthBase.year(), month:monthBase.month(), day:i})
     var dayshtml = compiled({"day": i,
                   "datacomplete": datacomplete.format("YYYY-MM-DD")})
     target.append(dayshtml);
@@ -61,9 +97,9 @@ function writeMonth(meseBase){
 
 
 
-function writeFeste(meseBase){
-  var anno = meseBase.year();
-  var mese = meseBase.month(); //questo restituisce il mese con base 0
+function writeFeste(monthBase){
+  var anno = monthBase.year();
+  var mese = monthBase.month(); //questo restituisce il mese con base 0
 
   $.ajax({
       url:'https://flynn.boolean.careers/exercises/api/holidays',
