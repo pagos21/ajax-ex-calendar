@@ -110,6 +110,7 @@ function writeFeste(monthBase){
       success:function(data, state) {
         var holidays = data["response"];
         for (var i = 0; i < holidays.length; i++) {
+          console.log(holidays);
           var element = $(".calendarCell span[data-complete='"+holidays[i].date+"']");
           console.log(element);
           element.addClass("festa");
